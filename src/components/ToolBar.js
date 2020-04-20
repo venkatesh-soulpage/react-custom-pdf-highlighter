@@ -4,9 +4,9 @@ class ToolBar extends React.Component {
     render(){
   return (
     <div className="container rounded text-white" style={{backgroundColor: "#343a40bf"}}>
-    <div className="row">
-      <div className="col-sm-4 text-center">
-        <div className="btn-group" role="group">
+    <div className="row py-1 pr-2">
+      <div className="col-sm-3 p-0 text-center">
+        <div className="btn-group d-flex justify-content-center" role="group">
           <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={()=>zoomMinus()}>
             <i className="material-icons">zoom_out</i>
           </button>
@@ -18,18 +18,18 @@ class ToolBar extends React.Component {
           </button>
         </div>
       </div>
-      <div className="col-sm-4 text-center">
+      <div className="col-sm-6 p-0 text-center">
         <div className="btn-group" role="group">
           <button className="btn btn-sm btn-link text-white pr-2" onClick={()=>previousPage()}>
             <i className="material-icons">keyboard_arrow_left</i>
           </button>
-          <div class="small py-3">Page  {`@`} / {`@`}</div>
+          <div class="small py-2">Page  {`@`} / {`@`}</div>
           <button className="btn btn-sm btn-link text-white pl-2" onClick={()=>nextPage()}>
             <i className="material-icons">keyboard_arrow_right</i>
           </button>
         </div>
       </div>
-      <div className="col-sm-4 text-center">
+      <div className="col-sm-3 p-0 text-center">
         <div className="btn-group" role="group">
           <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={()=>rotateLeft()}>
             <i className="material-icons">rotate_left</i>
