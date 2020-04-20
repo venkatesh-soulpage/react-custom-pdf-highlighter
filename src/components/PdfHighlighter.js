@@ -258,7 +258,7 @@ var PdfHighlighter = function (_PureComponent) {
 
     // debug
     window.PdfViewer = this;
-    window.addEventListener('resize', this.updateOnresize)
+    window.addEventListener('resize', (e)=>(console.log("resize",e)))
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
 
@@ -270,7 +270,7 @@ var PdfHighlighter = function (_PureComponent) {
   };
 
   PdfHighlighter.prototype.componentWillUnmount = function componentWillUnmount() {
-    window.removeEventListener('resize', this.updateOnresize)
+    // window.removeEventListener('resize', this.updateOnresize)
     document.removeEventListener("selectionchange", this.onSelectionChange);
     document.removeEventListener("keydown", this.handleKeyDown);
 
