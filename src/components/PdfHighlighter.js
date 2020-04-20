@@ -56,7 +56,7 @@ var _MouseSelection2 = _interopRequireDefault(_MouseSelection);
 
 var _ToolbarController = require("./ToolBar");
 
-var _ToolbarController2 = _interopRequireDefault(_ToolbarController);
+// var _ToolbarController2 = _interopRequireDefault(_ToolbarController);
 
 var _coordinates = require("../lib/coordinates");
 
@@ -514,7 +514,7 @@ var PdfHighlighter = function (_PureComponent) {
         }) : null
       ),
       _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ToolbarController2.default),
+      <_ToolbarController/>,
       ),
     );
   };
