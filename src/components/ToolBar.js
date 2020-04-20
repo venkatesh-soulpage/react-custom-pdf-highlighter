@@ -1,6 +1,7 @@
 import React from 'react'
 
-function ToolBar() {
+class ToolBar extends React.Component {
+    render(){
   return (
     <div className="container rounded text-white" style={{backgroundColor: "#343a40bf"}}>
     <div className="row">
@@ -44,7 +45,7 @@ function ToolBar() {
     </div>
   </div>
   )
-}
+}}
 
 export default ToolBar
 
