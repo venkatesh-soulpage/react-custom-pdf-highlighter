@@ -91,6 +91,7 @@ var PdfHighlighter = function (_PureComponent) {
       scrolledToHighlightId: EMPTY_ID,
       WindowclientWidth: 1000,
       currentpage:1,
+      currentScale:0.69,
     }, _this.viewer = null, _this.containerNode = null, _this.hideTipAndSelection = function () {
       var tipNode = (0, _pdfjsDom.findOrCreateContainerLayer)(_this.viewer.viewer, "PdfHighlighter__tip-layer");
 
@@ -260,6 +261,9 @@ var PdfHighlighter = function (_PureComponent) {
 
     // debug
     window.PdfViewer = this;
+    if(this.viewer.currentScale){
+      this.setState({currentScale: this.viewer.currentScale})
+    }
     this.viewer.container.addEventListener("scroll", this.updateOnscroll);
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
@@ -522,7 +526,7 @@ var PdfHighlighter = function (_PureComponent) {
         }) : null
       ),
       _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer, currentPageNum: _this4.currentpage}),
+      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer, currentPageNum: _this4.currentpage, currentScale:_this4.currentScale}),
       ),
     );
   };
