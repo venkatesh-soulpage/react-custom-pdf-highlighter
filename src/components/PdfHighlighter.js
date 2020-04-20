@@ -30,6 +30,8 @@ require("../style/PdfHighlighter.css");
 
 require("../style/App.css");
 
+require('bootstrap/dist/css/bootstrap.css')
+
 var _getBoundingRect = require("../lib/get-bounding-rect");
 
 var _getBoundingRect2 = _interopRequireDefault(_getBoundingRect);
