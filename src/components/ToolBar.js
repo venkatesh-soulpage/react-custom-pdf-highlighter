@@ -1,10 +1,4 @@
 import React, { Component } from 'react';
-import '../style/App.css'
-
-const cust_style =  {
-    backgroundColor: "#343a40bf",
-    borderRadius: '2.25rem !important',
-  };
 
 class PdfViewerController extends Component {
 
@@ -107,7 +101,7 @@ class PdfViewerController extends Component {
 
         console.log("page", currentPageNum, pagesCount)
         return (
-            <div className="container text-white cust_style">
+            <div className="container rounded text-white" style={{backgroundColor: "#343a40bf", borderRadius:'2.25rem'}}>
                 <div className="row py-1 pr-2">
                     <div className="col-sm-3 p-0 text-center">
                         <div className="btn-group d-flex justify-content-center" role="group">
