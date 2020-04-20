@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import '../style/App.css'
+
 class PdfViewerController extends Component {
 
     constructor(props) {
@@ -37,13 +39,15 @@ class PdfViewerController extends Component {
 
     }
 
-    zoomMinus = function () {
+    zoomMinus =  () => {
+        console.log("log -")
         this.setState({
             scaleValue: this.state.scaleValue - 0.2
         }, () => window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue)
     }
 
-    zoomPlus = function () {
+    zoomPlus = () => {
+        console.log("log +")
         this.setState({
             scaleValue: this.state.scaleValue + 0.2
         }, () => window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue)
@@ -88,7 +92,7 @@ class PdfViewerController extends Component {
     }
 
     render() {
-
+        console.log(this.props)
         const { currentPageNum, totalPages } = this.props;
 
         try {
@@ -102,37 +106,37 @@ class PdfViewerController extends Component {
                 <div className="row py-1 pr-2">
                     <div className="col-sm-3 p-0 text-center">
                         <div className="btn-group d-flex justify-content-center" role="group">
-                            <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => zoomMinus()}>
+                            <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => this.zoomMinus()}>
                                 <i className="material-icons">zoom_out</i>
                             </button>
-                            <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => zoomReset()}>
+                            <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => this.zoomReset()}>
                                 <i className="material-icons">refresh</i>
                             </button>
-                            <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => zoomPlus()}>
+                            <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => this.zoomPlus()}>
                                 <i className="material-icons">zoom_in</i>
                             </button>
                         </div>
                     </div>
                     <div className="col-sm-6 p-0 text-center">
                         <div className="btn-group" role="group">
-                            <button className="btn btn-sm btn-link text-white pr-2" onClick={() => previousPage()}>
+                            <button className="btn btn-sm btn-link text-white pr-2" onClick={() => this.previousPage()}>
                                 <i className="material-icons">keyboard_arrow_left</i>
                             </button>
-                            <div class="small py-2">Page  {currentPageNum} / {pagesCount}</div>
-                            <button className="btn btn-sm btn-link text-white pl-2" onClick={() => nextPage()}>
+                            <div class="small py-2">Page  {currentPageNumber} / {pagesCount}</div>
+                            <button className="btn btn-sm btn-link text-white pl-2" onClick={() => this.nextPage()}>
                                 <i className="material-icons">keyboard_arrow_right</i>
                             </button>
                         </div>
                     </div>
                     <div className="col-sm-3 p-0 text-center">
                         <div className="btn-group" role="group">
-                            <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => rotateLeft()}>
+                            <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => this.rotateLeft()}>
                                 <i className="material-icons">rotate_left</i>
                             </button>
-                            <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => rotateReset()}>
+                            <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => this.rotateReset()}>
                                 <i className="material-icons">refresh</i>
                             </button>
-                            <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => rotateRight()}>
+                            <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => this.rotateRight()}>
                                 <i className="material-icons">rotate_right</i>
                             </button>
                         </div>
