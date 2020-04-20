@@ -19,21 +19,21 @@ class PdfViewerController extends Component {
 
     componentDidUpdate(prevProps) {
         // console.log(this.props.PdfCurrentPageNum)
-        if (prevProps.clientWidth !== this.props.clientWidth) {
-            let clientWidth = prevProps.clientWidth !== 0 && prevProps.clientWidth ? prevProps.clientWidth / 1150 : this.props.clientWidth / 1150
-            let width = this.state.scaleValue !== 0 ? this.state.scaleValue - clientWidth : 0
-            width = this.props.clientWidth / 1150 + width
-            this.setState({
-                scaleValue: width,
-                current: window.PdfViewer.viewer.currentPageNumber,
-                total: window.PdfViewer.viewer.pagesCount
-            }, () => {
-                console.log(this.state.scaleValue)
-                if (window.PdfViewer) {
-                    window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
-                }
-            })
-        }
+        // if (prevProps.clientWidth !== this.props.clientWidth) {
+        //     let clientWidth = prevProps.clientWidth !== 0 && prevProps.clientWidth ? prevProps.clientWidth / 1150 : this.props.clientWidth / 1150
+        //     let width = this.state.scaleValue !== 0 ? this.state.scaleValue - clientWidth : 0
+        //     width = this.props.clientWidth / 1150 + width
+        //     this.setState({
+        //         scaleValue: width,
+        //         current: window.PdfViewer.viewer.currentPageNumber,
+        //         total: window.PdfViewer.viewer.pagesCount
+        //     }, () => {
+        //         console.log(this.state.scaleValue)
+        //         if (window.PdfViewer) {
+        //             window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
+        //         }
+        //     })
+        // }
 
     }
 
