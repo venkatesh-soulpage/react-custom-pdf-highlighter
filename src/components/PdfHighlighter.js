@@ -514,7 +514,7 @@ var PdfHighlighter = function (_PureComponent) {
         }) : null
       ),
       _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer}),
+      _react2.default.createElement(_ToolbarController2.default,{currentPageNumber:this.viewer.currentPageNumber}),
       ),
     );
   };
