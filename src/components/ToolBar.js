@@ -5,6 +5,7 @@ class PdfViewerController extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentScaleValue: window.PdfViewer.viewer.currentScaleValue,
             scaleValue: 0.69,
             current: 0,
             total: 0
@@ -15,15 +16,15 @@ class PdfViewerController extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.currentScale !== this.props.currentScale) {
-            this.setState({
-                scaleValue: this.props.currentScale,
-            }, () => {
-                if (window.PdfViewer) {
-                    window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
-                }
-            })
-        }
+        // if (prevProps.currentScale !== this.props.currentScale) {
+        //     this.setState({
+        //         scaleValue: this.props.currentScale,
+        //     }, () => {
+        //         if (window.PdfViewer) {
+        //             window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
+        //         }
+        //     })
+        // }
     }
 
     zoomMinus =  () => {
@@ -40,7 +41,7 @@ class PdfViewerController extends Component {
 
     zoomReset = function () {
         this.setState({
-            scaleValue: this.props.currentScale,
+            scaleValue: this.state.currentScaleValue,
         }, () => window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue)
     }
 
@@ -77,15 +78,11 @@ class PdfViewerController extends Component {
     }
 
     render() {
-        console.log(this.props)
         const { currentPageNum, totalPages } = this.props;
-
         try {
             var currentPageNumber = window.PdfViewer.viewer.currentPageNumber ? window.PdfViewer.viewer.currentPageNumber : currentPageNum
             var pagesCount = window.PdfViewer.viewer.pagesCount ? window.PdfViewer.viewer.pagesCount : 1
         } catch (error) { }
-
-        console.log("page", currentPageNum, pagesCount)
         return (
             <div className="container text-white" style={{backgroundColor: "#343a40bf", borderRadius:'2.25rem'}}>
                 <div className="row py-1 px-2">

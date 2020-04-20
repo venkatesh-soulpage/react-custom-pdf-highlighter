@@ -158,7 +158,6 @@ var PdfHighlighter = function (_PureComponent) {
 
       _this.debouncedAfterSelection();
     }, _this.updateOnscroll = function(e){
-      console.log("scrool", _this.viewer)
       if(_this.viewer && _this.state.currentpage !== _this.viewer.currentPageNumber ){
         _this.setState({currentpage:_this.viewer.currentPageNumber})
       }
