@@ -5,14 +5,16 @@ class PdfViewerController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentScaleValue: window.PdfViewer.viewer.currentScaleValue,
-            scaleValue: 0.69,
+            scaleValue: 0.71,
             current: 0,
             total: 0
         }
     }
 
     componentDidMount() {
+        if (window.PdfViewer) {
+            window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -41,7 +43,7 @@ class PdfViewerController extends Component {
 
     zoomReset = function () {
         this.setState({
-            scaleValue: this.state.currentScaleValue,
+            scaleValue: 0.71,
         }, () => window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue)
     }
 
