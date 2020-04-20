@@ -258,7 +258,7 @@ var PdfHighlighter = function (_PureComponent) {
 
     // debug
     window.PdfViewer = this;
-    window.addEventListener('resize', (e)=>(console.log("resize",e)))
+    window.window.addEventListener('resize', (e)=>(console.log("resize",e)))
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
 
