@@ -156,7 +156,7 @@ var PdfHighlighter = function (_PureComponent) {
 
       _this.debouncedAfterSelection();
     }, _this.updateOnscroll = function(e){
-        console.log(e)
+      console.log("scrool", _this.viewer)
     },_this.onScroll = function () {
       var onScrollChange = _this.props.onScrollChange;
 
