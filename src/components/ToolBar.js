@@ -101,8 +101,8 @@ class PdfViewerController extends Component {
 
         console.log("page", currentPageNum, pagesCount)
         return (
-            <div className="container rounded text-white" style={{backgroundColor: "#343a40bf", borderRadius:'2.25rem'}}>
-                <div className="row py-1 pr-2">
+            <div className="container text-white" style={{backgroundColor: "#343a40bf", borderRadius:'2.25rem'}}>
+                <div className="row py-1 px-2">
                     <div className="col-sm-3 p-0 text-center">
                         <div className="btn-group d-flex justify-content-center" role="group">
                             <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => this.zoomMinus()}>
