@@ -35,7 +35,6 @@ class PdfViewerController extends Component {
         //         }
         //     })
         // }
-
     }
 
     zoomMinus =  () => {
