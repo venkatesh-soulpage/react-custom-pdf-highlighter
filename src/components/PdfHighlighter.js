@@ -88,7 +88,8 @@ var PdfHighlighter = function (_PureComponent) {
       ghostHighlight: null,
       isCollapsed: true,
       range: null,
-      scrolledToHighlightId: EMPTY_ID
+      scrolledToHighlightId: EMPTY_ID,
+      WindowclientWidth: 1000
     }, _this.viewer = null, _this.containerNode = null, _this.hideTipAndSelection = function () {
       var tipNode = (0, _pdfjsDom.findOrCreateContainerLayer)(_this.viewer.viewer, "PdfHighlighter__tip-layer");
 
@@ -154,7 +155,11 @@ var PdfHighlighter = function (_PureComponent) {
       });
 
       _this.debouncedAfterSelection();
-    }, _this.onScroll = function () {
+    }, _this.updateOnresize = function(){
+        var WindowclientWidth = window.innerWidth ? window.innerWidth : 1000
+        console.log(WindowclientWidth)
+        return _this.setState({WindowclientWidth})
+    },_this.onScroll = function () {
       var onScrollChange = _this.props.onScrollChange;
 
 
@@ -253,7 +258,7 @@ var PdfHighlighter = function (_PureComponent) {
 
     // debug
     window.PdfViewer = this;
-
+    window.addEventListener('resize', this.updateOnresize)
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
 
@@ -265,6 +270,7 @@ var PdfHighlighter = function (_PureComponent) {
   };
 
   PdfHighlighter.prototype.componentWillUnmount = function componentWillUnmount() {
+    window.removeEventListener('resize', this.updateOnresize)
     document.removeEventListener("selectionchange", this.onSelectionChange);
     document.removeEventListener("keydown", this.handleKeyDown);
 
@@ -514,7 +520,7 @@ var PdfHighlighter = function (_PureComponent) {
         }) : null
       ),
       _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer}),
+      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer, clientWidth:_this.props.clientWidth}),
       ),
     );
   };
