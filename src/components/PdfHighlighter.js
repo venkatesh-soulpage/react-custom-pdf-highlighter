@@ -504,7 +504,8 @@ var PdfHighlighter = function (_PureComponent) {
             }));
           }
         }) : null
-      )
+      ),
+      _react2.default.createElement("div", { className: "outer-container" }),
     );
   };
 
