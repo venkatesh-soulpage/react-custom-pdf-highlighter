@@ -155,10 +155,8 @@ var PdfHighlighter = function (_PureComponent) {
       });
 
       _this.debouncedAfterSelection();
-    }, _this.updateOnresize = function(){
-        var WindowclientWidth = window.innerWidth ? window.innerWidth : 1000
-        console.log(WindowclientWidth)
-        return _this.setState({WindowclientWidth})
+    }, _this.updateOnscroll = function(e){
+        console.log(e)
     },_this.onScroll = function () {
       var onScrollChange = _this.props.onScrollChange;
 
@@ -258,7 +256,7 @@ var PdfHighlighter = function (_PureComponent) {
 
     // debug
     window.PdfViewer = this;
-    window.window.addEventListener('resize', (e)=>(console.log("resize",e)))
+    this.viewer.container.addEventListener("scroll", this.updateOnscroll);
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
 
@@ -270,7 +268,7 @@ var PdfHighlighter = function (_PureComponent) {
   };
 
   PdfHighlighter.prototype.componentWillUnmount = function componentWillUnmount() {
-    // window.removeEventListener('resize', this.updateOnresize)
+    this.viewer.container.removeEventListener("scroll", this.updateOnscroll);
     document.removeEventListener("selectionchange", this.onSelectionChange);
     document.removeEventListener("keydown", this.handleKeyDown);
 
@@ -520,7 +518,7 @@ var PdfHighlighter = function (_PureComponent) {
         }) : null
       ),
       _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer}),
+      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer, clientWidth:_this.props.clientWidth}),
       ),
     );
   };
