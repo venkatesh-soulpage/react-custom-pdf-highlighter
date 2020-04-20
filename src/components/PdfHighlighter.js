@@ -52,10 +52,6 @@ var _MouseSelection = require("./MouseSelection");
 
 var _MouseSelection2 = _interopRequireDefault(_MouseSelection);
 
-var _ContollerToolbar = require('./Toolbar');
-
-var _ContollerToolbar2 = _interopRequireDefault(_ContollerToolbar);
-
 var _coordinates = require("../lib/coordinates");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -512,7 +508,7 @@ var PdfHighlighter = function (_PureComponent) {
         }) : null
       ),
       _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ContollerToolbar.default)
+      _react2.default.createElement("div", { className: "container rounded text-white" }),
       ),
     );
   };
