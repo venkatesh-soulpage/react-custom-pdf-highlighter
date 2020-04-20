@@ -22,7 +22,7 @@ function ToolBar() {
           <button className="btn btn-sm btn-link text-white pr-2" onClick={()=>previousPage()}>
             <i className="material-icons">keyboard_arrow_left</i>
           </button>
-          <div class="small py-3">Page  {currentPageNumber} / {pagesCount}</div>
+          <div class="small py-3">Page  {`@`} / {`@`}</div>
           <button className="btn btn-sm btn-link text-white pl-2" onClick={()=>nextPage()}>
             <i className="material-icons">keyboard_arrow_right</i>
           </button>
