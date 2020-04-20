@@ -52,7 +52,7 @@ var _MouseSelection = require("./MouseSelection");
 
 var _MouseSelection2 = _interopRequireDefault(_MouseSelection);
 
-var _ContollerToolbar = require('/Toolbar');
+var _ContollerToolbar = require('./Toolbar');
 
 var _ContollerToolbar2 = _interopRequireDefault(_ContollerToolbar);
 
