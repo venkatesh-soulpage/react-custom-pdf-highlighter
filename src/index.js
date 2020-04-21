@@ -1,3 +1,3 @@
 import CustomHighlighter from "./components/CustomHighlighter";
-
-export { CustomHighlighter};
+import PopupHighlighter from './components/PopupHighlighter'
+export { CustomHighlighter, PopupHighlighter};
