@@ -92,43 +92,45 @@ class PdfViewerController extends Component {
             var pagesCount = window.PdfViewer.viewer.pagesCount ? window.PdfViewer.viewer.pagesCount : 1
         } catch (error) { }
         return (
-            <div className="container text-white" style={{ backgroundColor: "#343a40bf", borderRadius: '2.25rem' }}>
-                <div className="row py-1 px-2">
-                    <div className="col-sm-3 p-0 text-center">
-                        <div className="btn-group" role="group">
-                            <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => this.zoomMinus()}>
-                                <i className="material-icons">zoom_out</i>
-                            </button>
-                            <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => this.zoomReset()}>
-                                <i className="material-icons">refresh</i>
-                            </button>
-                            <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => this.zoomPlus()}>
-                                <i className="material-icons">zoom_in</i>
-                            </button>
+            <div className="outer-container">
+                <div className="container text-white" style={{ backgroundColor: "#343a40bf", borderRadius: '2.25rem' }}>
+                    <div className="row py-1 px-2">
+                        <div className="col-sm-3 p-0 text-center">
+                            <div className="btn-group" role="group">
+                                <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => this.zoomMinus()}>
+                                    <i className="material-icons">zoom_out</i>
+                                </button>
+                                <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => this.zoomReset()}>
+                                    <i className="material-icons">refresh</i>
+                                </button>
+                                <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => this.zoomPlus()}>
+                                    <i className="material-icons">zoom_in</i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-sm-6 p-0 text-center">
-                        <div className="btn-group" role="group">
-                            <button className="btn btn-sm btn-link text-white pr-2" onClick={() => this.previousPage()}>
-                                <i className="material-icons">keyboard_arrow_left</i>
-                            </button>
-                            <div class="small py-2">Page  {currentPageNumber} / {pagesCount}</div>
-                            <button className="btn btn-sm btn-link text-white pl-2" onClick={() => this.nextPage()}>
-                                <i className="material-icons">keyboard_arrow_right</i>
-                            </button>
+                        <div className="col-sm-6 p-0 text-center">
+                            <div className="btn-group" role="group">
+                                <button className="btn btn-sm btn-link text-white pr-2" onClick={() => this.previousPage()}>
+                                    <i className="material-icons">keyboard_arrow_left</i>
+                                </button>
+                                <div class="small py-2">Page  {currentPageNumber} / {pagesCount}</div>
+                                <button className="btn btn-sm btn-link text-white pl-2" onClick={() => this.nextPage()}>
+                                    <i className="material-icons">keyboard_arrow_right</i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-sm-3 p-0 text-center">
-                        <div className="btn-group" role="group">
-                            <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => this.rotateLeft()}>
-                                <i className="material-icons">rotate_left</i>
-                            </button>
-                            <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => this.rotateReset()}>
-                                <i className="material-icons">refresh</i>
-                            </button>
-                            <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => this.rotateRight()}>
-                                <i className="material-icons">rotate_right</i>
-                            </button>
+                        <div className="col-sm-3 p-0 text-center">
+                            <div className="btn-group" role="group">
+                                <button type="button" className="btn btn-sm btn-link text-white pr-2" onClick={() => this.rotateLeft()}>
+                                    <i className="material-icons">rotate_left</i>
+                                </button>
+                                <button type="button" className="btn btn-sm btn-link text-white px-2" onClick={() => this.rotateReset()}>
+                                    <i className="material-icons">refresh</i>
+                                </button>
+                                <button type="button" className="btn btn-sm btn-link text-white pl-2" onClick={() => this.rotateRight()}>
+                                    <i className="material-icons">rotate_right</i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
