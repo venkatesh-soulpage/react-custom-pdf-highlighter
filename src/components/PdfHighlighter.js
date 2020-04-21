@@ -3,6 +3,7 @@ import ReactDom from "react-dom";
 import Pointable from "react-pointable";
 import _ from "lodash/fp";
 import { PDFViewer, PDFLinkService } from "pdfjs-dist/web/pdf_viewer";
+import ToolBar from './ToolBar';
 
 import "pdfjs-dist/web/pdf_viewer.css";
 import "../style/pdf_viewer.css";
@@ -73,7 +74,7 @@ type Props<T_HT> = {
     content: { text?: string, image?: string },
     hideTipAndSelection: () => void,
     transformSelection: () => void
-  ) => ?React$Element<*>,
+  ) =>?React$Element<*>,
   enableAreaSelection: (event: MouseEvent) => boolean
 };
 
@@ -82,12 +83,14 @@ const EMPTY_ID = "empty-id";
 class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
   Props<T_HT>,
   State<T_HT>
-> {
+  > {
   state = {
     ghostHighlight: null,
     isCollapsed: true,
     range: null,
-    scrolledToHighlightId: EMPTY_ID
+    scrolledToHighlightId: EMPTY_ID,
+    currentScale: 0.71,
+    currentpage: 1,
   };
 
   state: State<T_HT>;
@@ -127,7 +130,7 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
 
     // debug
     window.PdfViewer = this;
-
+    this.viewer.removeEventListener('scroll', this.onscrollPage);
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
 
@@ -144,6 +147,7 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
   }
 
   componentWillUnmount() {
+    this.viewer.removeEventListener('scroll', this.onscrollPage);
     document.removeEventListener("selectionchange", this.onSelectionChange);
     document.removeEventListener("keydown", this.handleKeyDown);
 
@@ -152,6 +156,12 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
         "textlayerrendered",
         this.onTextLayerRendered
       );
+  }
+
+  onscrollPage = (e) => {
+    if (this.viewer && this.state.currentpage !== this.viewer.currentPageNumber) {
+      this.setState({ currentpage: this.viewer.currentPageNumber })
+    }
   }
 
   findOrCreateHighlightLayer(page: number) {
@@ -362,7 +372,7 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
         ...pageViewport.convertToPdfPoint(
           0,
           scaledToViewport(boundingRect, pageViewport, usePdfCoordinates).top -
-            scrollMargin
+          scrollMargin
         ),
         0
       ]
@@ -385,7 +395,7 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
     const { scrollRef } = this.props;
 
     this.viewer.currentScaleValue = "auto";
-
+    this.setState({ currentScale: this.viewer.currentScale })
     scrollRef(this.scrollTo);
   };
 
@@ -571,6 +581,13 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
             />
           ) : null}
         </div>
+        {this.viewer ?
+          <ToolBar
+            viewer={this.viewer}
+            currentScale={this.state.currentScale}
+            currentPageNum={this.state.currentpage}
+          />
+          : null}
       </Pointable>
     );
   }
