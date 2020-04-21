@@ -1,5 +1,3 @@
-// @flow
-
 import type { T_LTWH } from "../types.js";
 
 import optimizeClientRects from "./optimize-client-rects";

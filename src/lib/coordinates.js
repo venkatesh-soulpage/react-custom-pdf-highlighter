@@ -1,5 +1,3 @@
-// @flow
-
 // "viewport" rectangle is { top, left, width, height }
 
 // "scaled" means that data structure stores (0, 1) coordinates.

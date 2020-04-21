@@ -1,5 +1,3 @@
-// @flow
-
 import type { T_LTWH } from "../types.js";
 
 const getBoundingRect = (clientRects: Array<T_LTWH>): T_LTWH => {

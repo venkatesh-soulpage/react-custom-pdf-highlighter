@@ -1,5 +1,3 @@
-// @flow
-
 import type { T_LTWH } from "../types.js";
 
 const getAreaAsPNG = (canvas: HTMLCanvasElement, position: T_LTWH): string => {
