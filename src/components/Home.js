@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import URLSearchParams from "url-search-params";
-import { PdfHighlighter, Tip, Highlight, Popup, AreaHighlight, PdfLoader } from 'custom-react-pdf-highlight';
+import PdfHighlighter from "./components/PdfHighlighter";
+import Tip from "./components/Tip";
+import Highlight from "./components/Highlight";
+import Popup from "./components/Popup";
+import AreaHighlight from "./components/AreaHighlight";
+import PdfLoader from "./components/PdfLoader";
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import pdfjs from 'pdfjs-dist';
 import Spinner from "./Spinner";
