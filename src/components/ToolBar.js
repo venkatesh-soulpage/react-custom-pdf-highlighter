@@ -5,6 +5,7 @@ class PdfViewerController extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            originalScale:0.71,
             scaleValue: 0.71,
             current: 0,
             total: 0
@@ -13,8 +14,10 @@ class PdfViewerController extends Component {
 
     componentDidMount() {
         if (window.PdfViewer) {
-            console.log("scale",window.PdfViewer.viewer.currentScaleValue)
-            // window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
+            console.log("scale",window.PdfViewer.viewer.currentScale)
+            this.setState({
+                originalScale: window.PdfViewer.viewer.currentScale,
+                scaleValue:window.PdfViewer.viewer.currentScale})
         }
     }
 
@@ -24,7 +27,7 @@ class PdfViewerController extends Component {
         //         scaleValue: this.props.currentScale,
         //     }, () => {
         //         if (window.PdfViewer) {
-        //             window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
+        //             window.PdfViewer.viewer.currentScale = this.state.scaleValue
         //         }
         //     })
         // }
@@ -33,19 +36,19 @@ class PdfViewerController extends Component {
     zoomMinus =  () => {
         this.setState({
             scaleValue: this.state.scaleValue - 0.2
-        }, () => window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue)
+        }, () => window.PdfViewer.viewer.currentScale = this.state.scaleValue)
     }
 
     zoomPlus = () => {
         this.setState({
             scaleValue: this.state.scaleValue + 0.2
-        }, () => window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue)
+        }, () => window.PdfViewer.viewer.currentScale = this.state.scaleValue)
     }
 
     zoomReset = function () {
         this.setState({
             scaleValue: 0.71,
-        }, () => window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue)
+        }, () => window.PdfViewer.viewer.currentScale = this.state.originalScale)
     }
 
     rotateLeft = function () {
