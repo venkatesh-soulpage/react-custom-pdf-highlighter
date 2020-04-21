@@ -5,6 +5,6 @@ import Highlight from "./components/Highlight";
 import Popup from "./components/Popup";
 import AreaHighlight from "./components/AreaHighlight";
 import PdfLoader from "./components/PdfLoader";
-import CustomPdfHighlighter from './components/CustomPdfHighlighter';
+import CustomHighlighter from './components/CustomHighlighter';
 
-export { CustomPdfHighlighter, PdfHighlighter, Tip, Highlight, Popup, AreaHighlight, PdfLoader };
+export { CustomHighlighter, PdfHighlighter, Tip, Highlight, Popup, AreaHighlight, PdfLoader };
