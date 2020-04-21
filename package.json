@@ -22,7 +22,8 @@
     "lodash": "^4.17.10",
     "pdfjs-dist": "2.0.489",
     "react-pointable": "^1.1.1",
-    "react-rnd": "^7.1.5"
+    "react-rnd": "^7.1.5",
+    "url-search-params": "^1.1.0"
   },
   "peerDependencies": {
     "react": ">=0.14",
@@ -36,8 +37,7 @@
     "nwb": "^0.21.0",
     "prettier": "^1.8.2",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "url-search-params": "0.6.1"
+    "react-dom": "^15.4.2"
   },
   "author": "marx",
   "license": "MIT",
