@@ -5,7 +5,7 @@ class PdfViewerController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            originalScale:0.71,
+            originalScale: -1,
             scaleValue: 0.71,
             current: 0,
             total: 0
@@ -14,10 +14,7 @@ class PdfViewerController extends Component {
 
     componentDidMount() {
         if (window.PdfViewer) {
-            console.log("scale",window.PdfViewer.viewer.currentScale)
-            this.setState({
-                originalScale: window.PdfViewer.viewer.currentScale,
-                scaleValue:window.PdfViewer.viewer.currentScale})
+            console.log("scale", window.PdfViewer.viewer.currentScale)
         }
     }
 
@@ -33,7 +30,10 @@ class PdfViewerController extends Component {
         // }
     }
 
-    zoomMinus =  () => {
+    setScaleValue = (val) => {
+        this.setState({ originalScale: val, scaleValue: val })
+    }
+    zoomMinus = () => {
         this.setState({
             scaleValue: this.state.scaleValue - 0.2
         }, () => window.PdfViewer.viewer.currentScale = this.state.scaleValue)
@@ -86,11 +86,14 @@ class PdfViewerController extends Component {
     render() {
         const { currentPageNum, totalPages } = this.props;
         try {
+            if (window.PdfViewer && this.state.originalScale === -1) {
+                this.setScaleValue(window.PdfViewer.currentScale)
+            }
             var currentPageNumber = window.PdfViewer.viewer.currentPageNumber ? window.PdfViewer.viewer.currentPageNumber : currentPageNum
             var pagesCount = window.PdfViewer.viewer.pagesCount ? window.PdfViewer.viewer.pagesCount : 1
         } catch (error) { }
         return (
-            <div className="container text-white" style={{backgroundColor: "#343a40bf", borderRadius:'2.25rem'}}>
+            <div className="container text-white" style={{ backgroundColor: "#343a40bf", borderRadius: '2.25rem' }}>
                 <div className="row py-1 px-2">
                     <div className="col-sm-3 p-0 text-center">
                         <div className="btn-group" role="group">
