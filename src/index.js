@@ -1,3 +1,3 @@
-import PdfHighlighter from "./components/CustomHighlighter";
+import CustomHighlighter from "./components/CustomHighlighter";
 
-export { PdfHighlighter};
+export { CustomHighlighter};
