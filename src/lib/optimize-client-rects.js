@@ -1,11 +1,10 @@
-"use strict";
+// @flow
 
-exports.__esModule = true;
+import type { T_LTWH } from "../types.js";
 
-
-var sort = function sort(rects) {
-  return rects.sort(function (A, B) {
-    var top = A.top - B.top;
+const sort = rects =>
+  rects.sort((A, B) => {
+    const top = A.top - B.top;
 
     if (top === 0) {
       return A.left - B.left;
@@ -13,51 +12,46 @@ var sort = function sort(rects) {
 
     return top;
   });
-};
 
-var overlaps = function overlaps(A, B) {
-  return A.left <= B.left && B.left <= A.left + A.width;
-};
+const overlaps = (A, B) => A.left <= B.left && B.left <= A.left + A.width;
 
-var sameLine = function sameLine(A, B) {
-  var yMargin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5;
-  return Math.abs(A.top - B.top) < yMargin && Math.abs(A.height - B.height) < yMargin;
-};
+const sameLine = (A, B, yMargin = 5) =>
+  Math.abs(A.top - B.top) < yMargin && Math.abs(A.height - B.height) < yMargin;
 
-var inside = function inside(A, B) {
-  return A.top > B.top && A.left > B.left && A.top + A.height < B.top + B.height && A.left + A.width < B.left + B.width;
-};
+const inside = (A, B) =>
+  A.top > B.top &&
+  A.left > B.left &&
+  A.top + A.height < B.top + B.height &&
+  A.left + A.width < B.left + B.width;
 
-var nextTo = function nextTo(A, B) {
-  var xMargin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
-
-  var Aright = A.left + A.width;
-  var Bright = B.left + B.width;
+const nextTo = (A, B, xMargin = 10) => {
+  const Aright = A.left + A.width;
+  const Bright = B.left + B.width;
 
   return A.left <= B.left && Aright <= Bright && B.left - Aright <= xMargin;
 };
 
-var extendWidth = function extendWidth(A, B) {
+const extendWidth = (A, B) => {
   // extend width of A to cover B
   A.width = Math.max(B.width - A.left + B.left, A.width);
 };
 
-var optimizeClientRects = function optimizeClientRects(clientRects) {
-  var rects = sort(clientRects);
+const optimizeClientRects = (clientRects: Array<T_LTWH>): Array<T_LTWH> => {
+  const rects = sort(clientRects);
 
-  var toRemove = new Set();
+  const toRemove = new Set();
 
-  var firstPass = rects.filter(function (rect) {
-    return rects.every(function (otherRect) {
+  const firstPass = rects.filter(rect => {
+    return rects.every(otherRect => {
       return !inside(rect, otherRect);
     });
   });
 
-  var passCount = 0;
+  let passCount = 0;
 
   while (passCount <= 2) {
-    firstPass.forEach(function (A) {
-      firstPass.forEach(function (B) {
+    firstPass.forEach(A => {
+      firstPass.forEach(B => {
         if (A === B || toRemove.has(A) || toRemove.has(B)) {
           return;
         }
@@ -83,10 +77,7 @@ var optimizeClientRects = function optimizeClientRects(clientRects) {
     passCount += 1;
   }
 
-  return firstPass.filter(function (rect) {
-    return !toRemove.has(rect);
-  });
+  return firstPass.filter(rect => !toRemove.has(rect));
 };
 
-exports.default = optimizeClientRects;
-module.exports = exports["default"];
+export default optimizeClientRects;

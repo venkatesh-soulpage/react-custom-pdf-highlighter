@@ -1,26 +1,21 @@
-"use strict";
+// @flow
 
-exports.__esModule = true;
+import type { T_LTWH } from "../types.js";
 
+const getBoundingRect = (clientRects: Array<T_LTWH>): T_LTWH => {
+  const rects = Array.from(clientRects).map(rect => {
+    const { left, top, width, height } = rect;
 
-var getBoundingRect = function getBoundingRect(clientRects) {
-  var rects = Array.from(clientRects).map(function (rect) {
-    var left = rect.left,
-        top = rect.top,
-        width = rect.width,
-        height = rect.height;
+    const X0 = left;
+    const X1 = left + width;
 
+    const Y0 = top;
+    const Y1 = top + height;
 
-    var X0 = left;
-    var X1 = left + width;
-
-    var Y0 = top;
-    var Y1 = top + height;
-
-    return { X0: X0, X1: X1, Y0: Y0, Y1: Y1 };
+    return { X0, X1, Y0, Y1 };
   });
 
-  var optimal = rects.reduce(function (res, rect) {
+  const optimal = rects.reduce((res, rect) => {
     return {
       X0: Math.min(res.X0, rect.X0),
       X1: Math.max(res.X1, rect.X1),
@@ -30,11 +25,7 @@ var getBoundingRect = function getBoundingRect(clientRects) {
     };
   }, rects[0]);
 
-  var X0 = optimal.X0,
-      X1 = optimal.X1,
-      Y0 = optimal.Y0,
-      Y1 = optimal.Y1;
-
+  const { X0, X1, Y0, Y1 } = optimal;
 
   return {
     left: X0,
@@ -44,5 +35,4 @@ var getBoundingRect = function getBoundingRect(clientRects) {
   };
 };
 
-exports.default = getBoundingRect;
-module.exports = exports["default"];
+export default getBoundingRect;

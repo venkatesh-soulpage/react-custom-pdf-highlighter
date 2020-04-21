@@ -1,21 +1,19 @@
-"use strict";
+// @flow
 
-exports.__esModule = true;
+import type { T_LTWH } from "../types.js";
 
-var _optimizeClientRects = require("./optimize-client-rects");
+import optimizeClientRects from "./optimize-client-rects";
 
-var _optimizeClientRects2 = _interopRequireDefault(_optimizeClientRects);
+const getClientRects = (
+  range: Range,
+  containerEl: HTMLElement,
+  shouldOptimize: boolean = true
+): Array<T_LTWH> => {
+  let clientRects = Array.from(range.getClientRects());
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  const offset = containerEl.getBoundingClientRect();
 
-var getClientRects = function getClientRects(range, containerEl) {
-  var shouldOptimize = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
-  var clientRects = Array.from(range.getClientRects());
-
-  var offset = containerEl.getBoundingClientRect();
-
-  var rects = clientRects.map(function (rect) {
+  const rects = clientRects.map(rect => {
     return {
       top: rect.top + containerEl.scrollTop - offset.top,
       left: rect.left + containerEl.scrollLeft - offset.left,
@@ -24,8 +22,7 @@ var getClientRects = function getClientRects(range, containerEl) {
     };
   });
 
-  return shouldOptimize ? (0, _optimizeClientRects2.default)(rects) : rects;
+  return shouldOptimize ? optimizeClientRects(rects) : rects;
 };
 
-exports.default = getClientRects;
-module.exports = exports["default"];
+export default getClientRects;

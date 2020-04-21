@@ -1,251 +1,120 @@
-"use strict";
-
-exports.__esModule = true;
-
-var _debounce2 = require("lodash/fp/debounce");
-
-var _debounce3 = _interopRequireDefault(_debounce2);
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = require("react-dom");
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _reactPointable = require("react-pointable");
-
-var _reactPointable2 = _interopRequireDefault(_reactPointable);
-
-var _pdf_viewer = require("pdfjs-dist/web/pdf_viewer");
-
-require("pdfjs-dist/web/pdf_viewer.css");
-
-require("../style/pdf_viewer.css");
-
-require("../style/PdfHighlighter.css");
-
-require("../style/App.css");
-
-require('bootstrap/dist/css/bootstrap.css')
-
-var _getBoundingRect = require("../lib/get-bounding-rect");
-
-var _getBoundingRect2 = _interopRequireDefault(_getBoundingRect);
-
-var _getClientRects = require("../lib/get-client-rects");
-
-var _getClientRects2 = _interopRequireDefault(_getClientRects);
-
-var _getAreaAsPng = require("../lib/get-area-as-png");
-
-var _getAreaAsPng2 = _interopRequireDefault(_getAreaAsPng);
-
-var _pdfjsDom = require("../lib/pdfjs-dom");
-
-var _TipContainer = require("./TipContainer");
-
-var _TipContainer2 = _interopRequireDefault(_TipContainer);
-
-var _MouseSelection = require("./MouseSelection");
-
-var _MouseSelection2 = _interopRequireDefault(_MouseSelection);
-
-var _ToolbarController = require("./ToolBar");
-
-var _ToolbarController2 = _interopRequireDefault(_ToolbarController);
-
-var _coordinates = require("../lib/coordinates");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var EMPTY_ID = "empty-id";
-
-var PdfHighlighter = function (_PureComponent) {
-  _inherits(PdfHighlighter, _PureComponent);
-
-  function PdfHighlighter() {
-    var _temp, _this, _ret;
-
-    _classCallCheck(this, PdfHighlighter);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _PureComponent.call.apply(_PureComponent, [this].concat(args))), _this), _this.state = {
-      ghostHighlight: null,
-      isCollapsed: true,
-      range: null,
-      scrolledToHighlightId: EMPTY_ID,
-      WindowclientWidth: 1000,
-      currentpage:1,
-      currentScale:0.69,
-    }, _this.viewer = null, _this.containerNode = null, _this.hideTipAndSelection = function () {
-      var tipNode = (0, _pdfjsDom.findOrCreateContainerLayer)(_this.viewer.viewer, "PdfHighlighter__tip-layer");
-
-      _reactDom2.default.unmountComponentAtNode(tipNode);
-
-      _this.setState({ ghostHighlight: null, tip: null }, function () {
-        return _this.renderHighlights();
-      });
-    }, _this.onTextLayerRendered = function () {
-      _this.renderHighlights();
-    }, _this.scrollTo = function (highlight) {
-      var _highlight$position = highlight.position,
-          pageNumber = _highlight$position.pageNumber,
-          boundingRect = _highlight$position.boundingRect,
-          usePdfCoordinates = _highlight$position.usePdfCoordinates;
-
-
-      _this.viewer.container.removeEventListener("scroll", _this.onScroll);
-
-      var pageViewport = _this.viewer.getPageView(pageNumber - 1).viewport;
-
-      var scrollMargin = 10;
-
-      _this.viewer.scrollPageIntoView({
-        pageNumber: pageNumber,
-        destArray: [null, { name: "XYZ" }].concat(pageViewport.convertToPdfPoint(0, (0, _coordinates.scaledToViewport)(boundingRect, pageViewport, usePdfCoordinates).top - scrollMargin), [0])
-      });
-
-      _this.setState({
-        scrolledToHighlightId: highlight.id
-      }, function () {
-        return _this.renderHighlights();
-      });
-
-      // wait for scrolling to finish
-      setTimeout(function () {
-        _this.viewer.container.addEventListener("scroll", _this.onScroll);
-      }, 100);
-    }, _this.onDocumentReady = function () {
-      var scrollRef = _this.props.scrollRef;
-      _this.viewer.currentScaleValue = "auto";
-      _this.setState({currentScale: _this.viewer.currentScale})
-      scrollRef(_this.scrollTo);
-    }, _this.onSelectionChange = function () {
-      var selection = window.getSelection();
-
-      if (selection.isCollapsed) {
-        _this.setState({ isCollapsed: true });
-        return;
-      }
-
-      var range = selection.getRangeAt(0);
-
-      if (!range) {
-        return;
-      }
-
-      _this.setState({
-        isCollapsed: false,
-        range: range
-      });
-
-      _this.debouncedAfterSelection();
-    }, _this.updateOnscroll = function(e){
-      if(_this.viewer && _this.state.currentpage !== _this.viewer.currentPageNumber ){
-        _this.setState({currentpage:_this.viewer.currentPageNumber})
-      }
-    },_this.onScroll = function () {
-      var onScrollChange = _this.props.onScrollChange;
-
-
-      onScrollChange();
-
-      _this.setState({
-        scrolledToHighlightId: EMPTY_ID
-      }, function () {
-        return _this.renderHighlights();
-      });
-
-      _this.viewer.container.removeEventListener("scroll", _this.onScroll);
-    }, _this.onMouseDown = function (event) {
-      if (!(event.target instanceof HTMLElement)) {
-        return;
-      }
-
-      if (event.target.closest(".PdfHighlighter__tip-container")) {
-        return;
-      }
-
-      _this.hideTipAndSelection();
-    }, _this.handleKeyDown = function (event) {
-      if (event.code === "Escape") {
-        _this.hideTipAndSelection();
-      }
-    }, _this.afterSelection = function () {
-      var onSelectionFinished = _this.props.onSelectionFinished;
-      var _this$state = _this.state,
-          isCollapsed = _this$state.isCollapsed,
-          range = _this$state.range;
-
-
-      if (!range || isCollapsed) {
-        return;
-      }
-
-      var page = (0, _pdfjsDom.getPageFromRange)(range);
-
-      if (!page) {
-        return;
-      }
-
-      var rects = (0, _getClientRects2.default)(range, page.node);
-
-      if (rects.length === 0) {
-        return;
-      }
-
-      var boundingRect = (0, _getBoundingRect2.default)(rects);
-
-      var viewportPosition = { boundingRect: boundingRect, rects: rects, pageNumber: page.number };
-
-      var content = {
-        text: range.toString()
-      };
-      var scaledPosition = _this.viewportPositionToScaled(viewportPosition);
-
-      _this.renderTipAtPosition(viewportPosition, onSelectionFinished(scaledPosition, content, function () {
-        return _this.hideTipAndSelection();
-      }, function () {
-        return _this.setState({
-          ghostHighlight: { position: scaledPosition }
-        }, function () {
-          return _this.renderHighlights();
-        });
-      }));
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  PdfHighlighter.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
-    if (prevProps.highlights !== this.props.highlights) {
-      this.renderHighlights(this.props);
-    }
+import React, { PureComponent } from "react";
+import ReactDom from "react-dom";
+import Pointable from "react-pointable";
+import _ from "lodash/fp";
+import { PDFViewer, PDFLinkService } from "pdfjs-dist/web/pdf_viewer";
+
+import "pdfjs-dist/web/pdf_viewer.css";
+import "../style/pdf_viewer.css";
+
+import "../style/PdfHighlighter.css";
+
+import getBoundingRect from "../lib/get-bounding-rect";
+import getClientRects from "../lib/get-client-rects";
+import getAreaAsPng from "../lib/get-area-as-png";
+
+import {
+  getPageFromRange,
+  getPageFromElement,
+  findOrCreateContainerLayer
+} from "../lib/pdfjs-dom";
+
+import TipContainer from "./TipContainer";
+import MouseSelection from "./MouseSelection";
+
+import { scaledToViewport, viewportToScaled } from "../lib/coordinates";
+
+import type {
+  T_Position,
+  T_ScaledPosition,
+  T_Highlight,
+  T_Scaled,
+  T_LTWH,
+  T_PDFJS_Viewer,
+  T_PDFJS_Document,
+  T_PDFJS_LinkService
+} from "../types";
+
+type T_ViewportHighlight<T_HT> = { position: T_Position } & T_HT;
+
+type State<T_HT> = {
+  ghostHighlight: ?{
+    position: T_ScaledPosition
+  },
+  isCollapsed: boolean,
+  range: ?Range,
+  tip: ?{
+    highlight: T_ViewportHighlight<T_HT>,
+    callback: (highlight: T_ViewportHighlight<T_HT>) => React$Element<*>
+  },
+  isAreaSelectionInProgress: boolean,
+  scrolledToHighlightId: string
+};
+
+type Props<T_HT> = {
+  highlightTransform: (
+    highlight: T_ViewportHighlight<T_HT>,
+    index: number,
+    setTip: (
+      highlight: T_ViewportHighlight<T_HT>,
+      callback: (highlight: T_ViewportHighlight<T_HT>) => React$Element<*>
+    ) => void,
+    hideTip: () => void,
+    viewportToScaled: (rect: T_LTWH) => T_Scaled,
+    screenshot: (position: T_LTWH) => string,
+    isScrolledTo: boolean
+  ) => React$Element<*>,
+  highlights: Array<T_HT>,
+  onScrollChange: () => void,
+  scrollRef: (scrollTo: (highlight: T_Highlight) => void) => void,
+  pdfDocument: T_PDFJS_Document,
+  onSelectionFinished: (
+    position: T_ScaledPosition,
+    content: { text?: string, image?: string },
+    hideTipAndSelection: () => void,
+    transformSelection: () => void
+  ) => ?React$Element<*>,
+  enableAreaSelection: (event: MouseEvent) => boolean
+};
+
+const EMPTY_ID = "empty-id";
+
+class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
+  Props<T_HT>,
+  State<T_HT>
+> {
+  state = {
+    ghostHighlight: null,
+    isCollapsed: true,
+    range: null,
+    scrolledToHighlightId: EMPTY_ID
   };
 
-  PdfHighlighter.prototype.componentDidMount = function componentDidMount() {
-    var _this2 = this;
+  state: State<T_HT>;
+  props: Props<T_HT>;
 
-    var pdfDocument = this.props.pdfDocument;
+  viewer = null;
+  viewer: T_PDFJS_Viewer;
+  linkService: T_PDFJS_LinkService;
 
+  containerNode = null;
+  containerNode: ?HTMLDivElement;
 
-    this.debouncedAfterSelection = (0, _debounce3.default)(500, this.afterSelection);
-    this.linkService = new _pdf_viewer.PDFLinkService();
+  debouncedAfterSelection: () => void;
 
-    this.viewer = new _pdf_viewer.PDFViewer({
+  componentDidUpdate(prevProps: Props<T_HT>) {
+    if (prevProps.highlights !== this.props.highlights) {
+      this.renderHighlights(this.props)
+    }
+  }
+
+  componentDidMount() {
+    const { pdfDocument } = this.props;
+
+    this.debouncedAfterSelection = _.debounce(500, this.afterSelection);
+    this.linkService = new PDFLinkService();
+
+    this.viewer = new PDFViewer({
       container: this.containerNode,
       enhanceTextSelection: true,
       removePageBorders: true,
@@ -258,276 +127,453 @@ var PdfHighlighter = function (_PureComponent) {
 
     // debug
     window.PdfViewer = this;
-    this.viewer.container.addEventListener("scroll", this.updateOnscroll);
+
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
 
-    this.containerNode && this.containerNode.addEventListener("pagesinit", function () {
-      _this2.onDocumentReady();
-    });
+    this.containerNode &&
+      this.containerNode.addEventListener("pagesinit", () => {
+        this.onDocumentReady();
+      });
 
-    this.containerNode && this.containerNode.addEventListener("textlayerrendered", this.onTextLayerRendered);
-  };
+    this.containerNode &&
+      this.containerNode.addEventListener(
+        "textlayerrendered",
+        this.onTextLayerRendered
+      );
+  }
 
-  PdfHighlighter.prototype.componentWillUnmount = function componentWillUnmount() {
-    this.viewer.container.removeEventListener("scroll", this.updateOnscroll);
+  componentWillUnmount() {
     document.removeEventListener("selectionchange", this.onSelectionChange);
     document.removeEventListener("keydown", this.handleKeyDown);
 
-    this.containerNode && this.containerNode.removeEventListener("textlayerrendered", this.onTextLayerRendered);
-  };
+    this.containerNode &&
+      this.containerNode.removeEventListener(
+        "textlayerrendered",
+        this.onTextLayerRendered
+      );
+  }
 
-  PdfHighlighter.prototype.findOrCreateHighlightLayer = function findOrCreateHighlightLayer(page) {
-    var textLayer = this.viewer.getPageView(page - 1).textLayer;
+  findOrCreateHighlightLayer(page: number) {
+    const textLayer = this.viewer.getPageView(page - 1).textLayer;
 
     if (!textLayer) {
       return null;
     }
 
-    return (0, _pdfjsDom.findOrCreateContainerLayer)(textLayer.textLayerDiv, "PdfHighlighter__highlight-layer");
-  };
+    return findOrCreateContainerLayer(
+      textLayer.textLayerDiv,
+      "PdfHighlighter__highlight-layer"
+    );
+  }
 
-  PdfHighlighter.prototype.groupHighlightsByPage = function groupHighlightsByPage(highlights) {
-    var ghostHighlight = this.state.ghostHighlight;
+  groupHighlightsByPage(
+    highlights: Array<T_HT>
+  ): { [pageNumber: string]: Array<T_HT> } {
+    const { ghostHighlight } = this.state;
 
+    return [...highlights, ghostHighlight]
+      .filter(Boolean)
+      .reduce((res, highlight) => {
+        const { pageNumber } = highlight.position;
 
-    return [].concat(highlights, [ghostHighlight]).filter(Boolean).reduce(function (res, highlight) {
-      var pageNumber = highlight.position.pageNumber;
+        res[pageNumber] = res[pageNumber] || [];
+        res[pageNumber].push(highlight);
 
+        return res;
+      }, {});
+  }
 
-      res[pageNumber] = res[pageNumber] || [];
-      res[pageNumber].push(highlight);
+  showTip(highlight: T_ViewportHighlight<T_HT>, content: React$Element<*>) {
+    const {
+      isCollapsed,
+      ghostHighlight,
+      isAreaSelectionInProgress
+    } = this.state;
 
-      return res;
-    }, {});
-  };
-
-  PdfHighlighter.prototype.showTip = function showTip(highlight, content) {
-    var _state = this.state,
-        isCollapsed = _state.isCollapsed,
-        ghostHighlight = _state.ghostHighlight,
-        isAreaSelectionInProgress = _state.isAreaSelectionInProgress;
-
-
-    var highlightInProgress = !isCollapsed || ghostHighlight;
+    const highlightInProgress = !isCollapsed || ghostHighlight;
 
     if (highlightInProgress || isAreaSelectionInProgress) {
       return;
     }
 
     this.renderTipAtPosition(highlight.position, content);
-  };
+  }
 
-  PdfHighlighter.prototype.scaledPositionToViewport = function scaledPositionToViewport(_ref) {
-    var pageNumber = _ref.pageNumber,
-        boundingRect = _ref.boundingRect,
-        rects = _ref.rects,
-        usePdfCoordinates = _ref.usePdfCoordinates;
-
-    var viewport = this.viewer.getPageView(pageNumber - 1).viewport;
-
-    return {
-      boundingRect: (0, _coordinates.scaledToViewport)(boundingRect, viewport, usePdfCoordinates),
-      rects: (rects || []).map(function (rect) {
-        return (0, _coordinates.scaledToViewport)(rect, viewport, usePdfCoordinates);
-      }),
-      pageNumber: pageNumber
-    };
-  };
-
-  PdfHighlighter.prototype.viewportPositionToScaled = function viewportPositionToScaled(_ref2) {
-    var pageNumber = _ref2.pageNumber,
-        boundingRect = _ref2.boundingRect,
-        rects = _ref2.rects;
-
-    var viewport = this.viewer.getPageView(pageNumber - 1).viewport;
+  scaledPositionToViewport({
+    pageNumber,
+    boundingRect,
+    rects,
+    usePdfCoordinates
+  }: T_ScaledPosition): T_Position {
+    const viewport = this.viewer.getPageView(pageNumber - 1).viewport;
 
     return {
-      boundingRect: (0, _coordinates.viewportToScaled)(boundingRect, viewport),
-      rects: (rects || []).map(function (rect) {
-        return (0, _coordinates.viewportToScaled)(rect, viewport);
-      }),
-      pageNumber: pageNumber
+      boundingRect: scaledToViewport(boundingRect, viewport, usePdfCoordinates),
+      rects: (rects || []).map(rect =>
+        scaledToViewport(rect, viewport, usePdfCoordinates)
+      ),
+      pageNumber
     };
-  };
+  }
 
-  PdfHighlighter.prototype.screenshot = function screenshot(position, pageNumber) {
-    var canvas = this.viewer.getPageView(pageNumber - 1).canvas;
+  viewportPositionToScaled({
+    pageNumber,
+    boundingRect,
+    rects
+  }: T_Position): T_ScaledPosition {
+    const viewport = this.viewer.getPageView(pageNumber - 1).viewport;
 
-    return (0, _getAreaAsPng2.default)(canvas, position);
-  };
+    return {
+      boundingRect: viewportToScaled(boundingRect, viewport),
+      rects: (rects || []).map(rect => viewportToScaled(rect, viewport)),
+      pageNumber
+    };
+  }
 
-  PdfHighlighter.prototype.renderHighlights = function renderHighlights(nextProps) {
-    var _this3 = this;
+  screenshot(position: T_LTWH, pageNumber: number) {
+    const canvas = this.viewer.getPageView(pageNumber - 1).canvas;
 
-    var _ref3 = nextProps || this.props,
-        highlightTransform = _ref3.highlightTransform,
-        highlights = _ref3.highlights;
+    return getAreaAsPng(canvas, position);
+  }
 
-    var pdfDocument = this.props.pdfDocument;
-    var _state2 = this.state,
-        tip = _state2.tip,
-        scrolledToHighlightId = _state2.scrolledToHighlightId;
+  renderHighlights(nextProps?: Props<T_HT>) {
+    const { highlightTransform, highlights } = nextProps || this.props;
 
+    const { pdfDocument } = this.props;
 
-    var highlightsByPage = this.groupHighlightsByPage(highlights);
+    const { tip, scrolledToHighlightId } = this.state;
 
-    var _loop = function _loop(_pageNumber) {
-      var highlightLayer = _this3.findOrCreateHighlightLayer(_pageNumber);
+    const highlightsByPage = this.groupHighlightsByPage(highlights);
+
+    for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
+      const highlightLayer = this.findOrCreateHighlightLayer(pageNumber);
 
       if (highlightLayer) {
-        _reactDom2.default.render(_react2.default.createElement(
-          "div",
-          null,
-          (highlightsByPage[String(_pageNumber)] || []).map(function (highlight, index) {
-            var position = highlight.position,
-                rest = _objectWithoutProperties(highlight, ["position"]);
+        ReactDom.render(
+          <div>
+            {(highlightsByPage[String(pageNumber)] || []).map(
+              (highlight, index) => {
+                const { position, ...rest } = highlight;
 
-            var viewportHighlight = _extends({
-              position: _this3.scaledPositionToViewport(position)
-            }, rest);
+                const viewportHighlight = {
+                  position: this.scaledPositionToViewport(position),
+                  ...rest
+                };
 
-            if (tip && tip.highlight.id === String(highlight.id)) {
-              _this3.showTip(tip.highlight, tip.callback(viewportHighlight));
-            }
-
-            var isScrolledTo = Boolean(scrolledToHighlightId === highlight.id);
-
-            return highlightTransform(viewportHighlight, index, function (highlight, callback) {
-              _this3.setState({
-                tip: { highlight: highlight, callback: callback }
-              });
-
-              _this3.showTip(highlight, callback(highlight));
-            }, _this3.hideTipAndSelection, function (rect) {
-              var viewport = _this3.viewer.getPageView(_pageNumber - 1).viewport;
-
-              return (0, _coordinates.viewportToScaled)(rect, viewport);
-            }, function (boundingRect) {
-              return _this3.screenshot(boundingRect, _pageNumber);
-            }, isScrolledTo);
-          })
-        ), highlightLayer);
-      }
-    };
-
-    for (var _pageNumber = 1; _pageNumber <= pdfDocument.numPages; _pageNumber++) {
-      _loop(_pageNumber);
-    }
-  };
-
-  PdfHighlighter.prototype.renderTipAtPosition = function renderTipAtPosition(position, inner) {
-    var boundingRect = position.boundingRect,
-        pageNumber = position.pageNumber;
-
-
-    var page = {
-      node: this.viewer.getPageView(pageNumber - 1).div
-    };
-
-    var pageBoundingRect = page.node.getBoundingClientRect();
-
-    var tipNode = (0, _pdfjsDom.findOrCreateContainerLayer)(this.viewer.viewer, "PdfHighlighter__tip-layer");
-
-    _reactDom2.default.render(_react2.default.createElement(_TipContainer2.default, {
-      scrollTop: this.viewer.container.scrollTop,
-      pageBoundingRect: pageBoundingRect,
-      style: {
-        left: page.node.offsetLeft + boundingRect.left + boundingRect.width / 2,
-        top: boundingRect.top + page.node.offsetTop,
-        bottom: boundingRect.top + page.node.offsetTop + boundingRect.height
-      },
-      children: inner
-    }), tipNode);
-  };
-
-  PdfHighlighter.prototype.toggleTextSelection = function toggleTextSelection(flag) {
-    this.viewer.viewer.classList.toggle("PdfHighlighter--disable-selection", flag);
-  };
-
-  PdfHighlighter.prototype.render = function render() {
-    var _this4 = this;
-
-    var _props = this.props,
-        onSelectionFinished = _props.onSelectionFinished,
-        enableAreaSelection = _props.enableAreaSelection;
-
-
-    return _react2.default.createElement(
-      _reactPointable2.default,
-      { onPointerDown: this.onMouseDown },
-      _react2.default.createElement(
-        "div",
-        {
-          ref: function ref(node) {
-            return _this4.containerNode = node;
-          },
-          className: "PdfHighlighter",
-          onContextMenu: function onContextMenu(e) {
-            return e.preventDefault();
-          }
-        },
-        _react2.default.createElement("div", { className: "pdfViewer" }),
-        typeof enableAreaSelection === "function" ? _react2.default.createElement(_MouseSelection2.default, {
-          onDragStart: function onDragStart() {
-            return _this4.toggleTextSelection(true);
-          },
-          onDragEnd: function onDragEnd() {
-            return _this4.toggleTextSelection(false);
-          },
-          onChange: function onChange(isVisible) {
-            return _this4.setState({ isAreaSelectionInProgress: isVisible });
-          },
-          shouldStart: function shouldStart(event) {
-            return enableAreaSelection(event) && event.target instanceof HTMLElement && Boolean(event.target.closest(".page"));
-          },
-          onSelection: function onSelection(startTarget, boundingRect, resetSelection) {
-            var page = (0, _pdfjsDom.getPageFromElement)(startTarget);
-
-            if (!page) {
-              return;
-            }
-
-            var pageBoundingRect = _extends({}, boundingRect, {
-              top: boundingRect.top - page.node.offsetTop,
-              left: boundingRect.left - page.node.offsetLeft
-            });
-
-            var viewportPosition = {
-              boundingRect: pageBoundingRect,
-              rects: [],
-              pageNumber: page.number
-            };
-
-            var scaledPosition = _this4.viewportPositionToScaled(viewportPosition);
-
-            var image = _this4.screenshot(pageBoundingRect, page.number);
-
-            _this4.renderTipAtPosition(viewportPosition, onSelectionFinished(scaledPosition, { image: image }, function () {
-              return _this4.hideTipAndSelection();
-            }, function () {
-              return _this4.setState({
-                ghostHighlight: {
-                  position: scaledPosition,
-                  content: { image: image }
+                if (tip && tip.highlight.id === String(highlight.id)) {
+                  this.showTip(tip.highlight, tip.callback(viewportHighlight));
                 }
-              }, function () {
-                resetSelection();
-                _this4.renderHighlights();
-              });
-            }));
-          }
-        }) : null
-      ),
-      window.PdfViewer?
-      _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ToolbarController2.default,{viewer: window.PdfViewer , currentPageNum: _this4.state.currentpage, currentScale:_this4.state.currentScale}),
-      ):null
+
+                const isScrolledTo = Boolean(
+                  scrolledToHighlightId === highlight.id
+                );
+
+                return highlightTransform(
+                  viewportHighlight,
+                  index,
+                  (highlight, callback) => {
+                    this.setState({
+                      tip: { highlight, callback }
+                    });
+
+                    this.showTip(highlight, callback(highlight));
+                  },
+                  this.hideTipAndSelection,
+                  rect => {
+                    const viewport = this.viewer.getPageView(pageNumber - 1)
+                      .viewport;
+
+                    return viewportToScaled(rect, viewport);
+                  },
+                  boundingRect => this.screenshot(boundingRect, pageNumber),
+                  isScrolledTo
+                );
+              }
+            )}
+          </div>,
+          highlightLayer
+        );
+      }
+    }
+  }
+
+  hideTipAndSelection = () => {
+    const tipNode = findOrCreateContainerLayer(
+      this.viewer.viewer,
+      "PdfHighlighter__tip-layer"
+    );
+
+    ReactDom.unmountComponentAtNode(tipNode);
+
+    this.setState({ ghostHighlight: null, tip: null }, () =>
+      this.renderHighlights()
     );
   };
 
-  return PdfHighlighter;
-}(_react.PureComponent);
+  renderTipAtPosition(position: T_Position, inner: ?React$Element<*>) {
+    const { boundingRect, pageNumber } = position;
 
-exports.default = PdfHighlighter;
-module.exports = exports["default"];
+    const page = {
+      node: this.viewer.getPageView(pageNumber - 1).div
+    };
+
+    const pageBoundingRect = page.node.getBoundingClientRect();
+
+    const tipNode = findOrCreateContainerLayer(
+      this.viewer.viewer,
+      "PdfHighlighter__tip-layer"
+    );
+
+    ReactDom.render(
+      <TipContainer
+        scrollTop={this.viewer.container.scrollTop}
+        pageBoundingRect={pageBoundingRect}
+        style={{
+          left:
+            page.node.offsetLeft + boundingRect.left + boundingRect.width / 2,
+          top: boundingRect.top + page.node.offsetTop,
+          bottom: boundingRect.top + page.node.offsetTop + boundingRect.height
+        }}
+        children={inner}
+      />,
+      tipNode
+    );
+  }
+
+  onTextLayerRendered = () => {
+    this.renderHighlights();
+  };
+
+  scrollTo = (highlight: T_Highlight) => {
+    const { pageNumber, boundingRect, usePdfCoordinates } = highlight.position;
+
+    this.viewer.container.removeEventListener("scroll", this.onScroll);
+
+    const pageViewport = this.viewer.getPageView(pageNumber - 1).viewport;
+
+    const scrollMargin = 10;
+
+    this.viewer.scrollPageIntoView({
+      pageNumber,
+      destArray: [
+        null,
+        { name: "XYZ" },
+        ...pageViewport.convertToPdfPoint(
+          0,
+          scaledToViewport(boundingRect, pageViewport, usePdfCoordinates).top -
+            scrollMargin
+        ),
+        0
+      ]
+    });
+
+    this.setState(
+      {
+        scrolledToHighlightId: highlight.id
+      },
+      () => this.renderHighlights()
+    );
+
+    // wait for scrolling to finish
+    setTimeout(() => {
+      this.viewer.container.addEventListener("scroll", this.onScroll);
+    }, 100);
+  };
+
+  onDocumentReady = () => {
+    const { scrollRef } = this.props;
+
+    this.viewer.currentScaleValue = "auto";
+
+    scrollRef(this.scrollTo);
+  };
+
+  onSelectionChange = () => {
+    const selection: Selection = window.getSelection();
+
+    if (selection.isCollapsed) {
+      this.setState({ isCollapsed: true });
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+
+    if (!range) {
+      return;
+    }
+
+    this.setState({
+      isCollapsed: false,
+      range
+    });
+
+    this.debouncedAfterSelection();
+  };
+
+  onScroll = () => {
+    const { onScrollChange } = this.props;
+
+    onScrollChange();
+
+    this.setState(
+      {
+        scrolledToHighlightId: EMPTY_ID
+      },
+      () => this.renderHighlights()
+    );
+
+    this.viewer.container.removeEventListener("scroll", this.onScroll);
+  };
+
+  onMouseDown = (event: MouseEvent) => {
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (event.target.closest(".PdfHighlighter__tip-container")) {
+      return;
+    }
+
+    this.hideTipAndSelection();
+  };
+
+  handleKeyDown = (event: KeyboardEvent) => {
+    if (event.code === "Escape") {
+      this.hideTipAndSelection();
+    }
+  };
+
+  afterSelection = () => {
+    const { onSelectionFinished } = this.props;
+
+    const { isCollapsed, range } = this.state;
+
+    if (!range || isCollapsed) {
+      return;
+    }
+
+    const page = getPageFromRange(range);
+
+    if (!page) {
+      return;
+    }
+
+    const rects = getClientRects(range, page.node);
+
+    if (rects.length === 0) {
+      return;
+    }
+
+    const boundingRect = getBoundingRect(rects);
+
+    const viewportPosition = { boundingRect, rects, pageNumber: page.number };
+
+    const content = {
+      text: range.toString()
+    };
+    const scaledPosition = this.viewportPositionToScaled(viewportPosition);
+
+    this.renderTipAtPosition(
+      viewportPosition,
+      onSelectionFinished(
+        scaledPosition,
+        content,
+        () => this.hideTipAndSelection(),
+        () =>
+          this.setState(
+            {
+              ghostHighlight: { position: scaledPosition }
+            },
+            () => this.renderHighlights()
+          )
+      )
+    );
+  };
+
+  toggleTextSelection(flag: boolean) {
+    this.viewer.viewer.classList.toggle(
+      "PdfHighlighter--disable-selection",
+      flag
+    );
+  }
+
+  render() {
+    const { onSelectionFinished, enableAreaSelection } = this.props;
+
+    return (
+      <Pointable onPointerDown={this.onMouseDown}>
+        <div
+          ref={node => (this.containerNode = node)}
+          className="PdfHighlighter"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <div className="pdfViewer" />
+          {typeof enableAreaSelection === "function" ? (
+            <MouseSelection
+              onDragStart={() => this.toggleTextSelection(true)}
+              onDragEnd={() => this.toggleTextSelection(false)}
+              onChange={isVisible =>
+                this.setState({ isAreaSelectionInProgress: isVisible })
+              }
+              shouldStart={event =>
+                enableAreaSelection(event) &&
+                event.target instanceof HTMLElement &&
+                Boolean(event.target.closest(".page"))
+              }
+              onSelection={(startTarget, boundingRect, resetSelection) => {
+                const page = getPageFromElement(startTarget);
+
+                if (!page) {
+                  return;
+                }
+
+                const pageBoundingRect = {
+                  ...boundingRect,
+                  top: boundingRect.top - page.node.offsetTop,
+                  left: boundingRect.left - page.node.offsetLeft
+                };
+
+                const viewportPosition = {
+                  boundingRect: pageBoundingRect,
+                  rects: [],
+                  pageNumber: page.number
+                };
+
+                const scaledPosition = this.viewportPositionToScaled(
+                  viewportPosition
+                );
+
+                const image = this.screenshot(pageBoundingRect, page.number);
+
+                this.renderTipAtPosition(
+                  viewportPosition,
+                  onSelectionFinished(
+                    scaledPosition,
+                    { image },
+                    () => this.hideTipAndSelection(),
+                    () =>
+                      this.setState(
+                        {
+                          ghostHighlight: {
+                            position: scaledPosition,
+                            content: { image }
+                          }
+                        },
+                        () => {
+                          resetSelection();
+                          this.renderHighlights();
+                        }
+                      )
+                  )
+                );
+              }}
+            />
+          ) : null}
+        </div>
+      </Pointable>
+    );
+  }
+}
+
+export default PdfHighlighter;

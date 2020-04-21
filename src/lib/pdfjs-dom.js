@@ -1,20 +1,19 @@
-"use strict";
+// @flow
 
-exports.__esModule = true;
-var getPageFromElement = exports.getPageFromElement = function getPageFromElement(target) {
-  var node = target.closest(".page");
+export const getPageFromElement = (target: HTMLElement) => {
+  const node = target.closest(".page");
 
   if (!(node instanceof HTMLElement)) {
     return null;
   }
 
-  var number = Number(node.dataset.pageNumber);
+  const number = Number(node.dataset.pageNumber);
 
-  return { node: node, number: number };
+  return { node, number };
 };
 
-var getPageFromRange = exports.getPageFromRange = function getPageFromRange(range) {
-  var parentElement = range.startContainer.parentElement;
+export const getPageFromRange = (range: Range) => {
+  const parentElement = range.startContainer.parentElement;
 
   if (!(parentElement instanceof HTMLElement)) {
     return;
@@ -23,8 +22,11 @@ var getPageFromRange = exports.getPageFromRange = function getPageFromRange(rang
   return getPageFromElement(parentElement);
 };
 
-var findOrCreateContainerLayer = exports.findOrCreateContainerLayer = function findOrCreateContainerLayer(container, className) {
-  var layer = container.querySelector("." + className);
+export const findOrCreateContainerLayer = (
+  container: HTMLElement,
+  className: string
+) => {
+  let layer = container.querySelector(`.${className}`);
 
   if (!layer) {
     layer = document.createElement("div");
