@@ -524,9 +524,10 @@ var PdfHighlighter = function (_PureComponent) {
           }
         }) : null
       ),
+      window.PdfViewer ?
       _react2.default.createElement("div", { className: "outer-container" },
-      _react2.default.createElement(_ToolbarController2.default,{viewer:this.viewer, currentPageNum: _this4.currentpage, currentScale:_this4.currentScale}),
-      ),
+      _react2.default.createElement(_ToolbarController2.default,{viewer: window.PdfViewer , currentPageNum: _this4.state.currentpage, currentScale:_this4.state.currentScale}),
+      ):null
     );
   };
 
