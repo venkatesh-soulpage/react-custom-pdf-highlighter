@@ -13,7 +13,8 @@ class PdfViewerController extends Component {
 
     componentDidMount() {
         if (window.PdfViewer) {
-            window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
+            console.log("scale",window.PdfViewer.viewer.currentScaleValue)
+            // window.PdfViewer.viewer.currentScaleValue = this.state.scaleValue
         }
     }
 
