@@ -20,15 +20,16 @@ class PdfViewerController extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        // if (prevProps.currentScale !== this.props.currentScale) {
-        //     this.setState({
-        //         scaleValue: this.props.currentScale,
+        if (prevProps.currentScale !== this.props.currentScale) {
+            this.setScaleValue(this.props.currentScale)
+            // this.setState({
+            //     scaleValue: this.props.currentScale,
         //     }, () => {
         //         if (window.PdfViewer) {
         //             window.PdfViewer.viewer.currentScale = this.state.scaleValue
         //         }
-        //     })
-        // }
+            // })
+        }
     }
 
     setScaleValue = (val) => {
