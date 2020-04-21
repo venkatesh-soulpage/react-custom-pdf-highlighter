@@ -15,7 +15,7 @@ class PdfViewerController extends Component {
     componentDidMount() {
         console.log(this.props)
         if (window.PdfViewer) {
-            setScaleValue(this.props.viewer.viewer.currentScale)
+            this.setScaleValue(this.props.viewer.viewer.currentScale)
         }
     }
 
