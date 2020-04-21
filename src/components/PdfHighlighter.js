@@ -130,7 +130,7 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
 
     // debug
     window.PdfViewer = this;
-    this.viewer.removeEventListener('scroll', this.onscrollPage);
+    this.viewer.container.addEventListener('scroll', this.onscrollPage);
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
 
@@ -147,7 +147,7 @@ class PdfHighlighter<T_HT: T_Highlight> extends PureComponent<
   }
 
   componentWillUnmount() {
-    this.viewer.removeEventListener('scroll', this.onscrollPage);
+    this.viewer.container.removeEventListener('scroll', this.onscrollPage);
     document.removeEventListener("selectionchange", this.onSelectionChange);
     document.removeEventListener("keydown", this.handleKeyDown);
 
