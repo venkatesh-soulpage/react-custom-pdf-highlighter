@@ -42,6 +42,10 @@
   "author": "marx",
   "license": "MIT",
   "keywords": [
+    "custom-react-pdf-highlighter",
+    "react-pdf-highlighter",
+    "pdf-highlighter",
+    "pdf-highlight",
     "pdf",
     "highlight",
     "annotator",
