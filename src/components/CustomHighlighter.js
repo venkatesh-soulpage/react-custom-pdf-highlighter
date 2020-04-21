@@ -26,8 +26,7 @@ const HighlightPopup = ({ comment }) =>
   ) : null;
 
 
-
-export default class CustomHighlighter extends Component {
+class CustomHighlighter extends Component {
   constructor(props) {
     super(props)
     this.state = {
