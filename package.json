@@ -1,6 +1,6 @@
 {
   "name": "custom-react-pdf-highlight",
-  "version": "0.0.1-alpha-4-1.31",
+  "version": "0.0.1-alpha-4-1.23",
   "description": "Set of React components for PDF annotation",
   "main": "lib/index.js",
   "scripts": {
