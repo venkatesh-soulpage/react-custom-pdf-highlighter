@@ -132,10 +132,8 @@ var PdfHighlighter = function (_PureComponent) {
       }, 100);
     }, _this.onDocumentReady = function () {
       var scrollRef = _this.props.scrollRef;
-
-
       _this.viewer.currentScaleValue = "auto";
-
+      _this.setState({currentScale: _this.viewer.currentScale})
       scrollRef(_this.scrollTo);
     }, _this.onSelectionChange = function () {
       var selection = window.getSelection();
@@ -260,9 +258,6 @@ var PdfHighlighter = function (_PureComponent) {
 
     // debug
     window.PdfViewer = this;
-    if(this.viewer.currentScale){
-      this.setState({currentScale: this.viewer.currentScale})
-    }
     this.viewer.container.addEventListener("scroll", this.updateOnscroll);
     document.addEventListener("selectionchange", this.onSelectionChange);
     document.addEventListener("keydown", this.handleKeyDown);
