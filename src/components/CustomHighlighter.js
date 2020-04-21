@@ -63,6 +63,7 @@ class CustomHighlighter extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props)
     this.setState({ DEFAULT_URL: this.props.url })
     url = searchParams.get("url") || this.props.url;
   }
