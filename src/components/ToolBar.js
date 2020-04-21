@@ -5,7 +5,7 @@ class PdfViewerController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            originalScale: -1,
+            originalScale: 0.71,
             scaleValue: 0.71,
             current: 0,
             total: 0
@@ -13,6 +13,7 @@ class PdfViewerController extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props)
         if (window.PdfViewer) {
             console.log("scale", window.PdfViewer.viewer.currentScale)
         }
@@ -31,7 +32,7 @@ class PdfViewerController extends Component {
     }
 
     setScaleValue = (val) => {
-        this.setState({ originalScale: val, scaleValue: val })
+        // this.setState({ originalScale: val, scaleValue: val })
     }
     zoomMinus = () => {
         this.setState({
@@ -86,9 +87,6 @@ class PdfViewerController extends Component {
     render() {
         const { currentPageNum, totalPages } = this.props;
         try {
-            if (window.PdfViewer && this.state.originalScale === -1) {
-                this.setScaleValue(window.PdfViewer.currentScale)
-            }
             var currentPageNumber = window.PdfViewer.viewer.currentPageNumber ? window.PdfViewer.viewer.currentPageNumber : currentPageNum
             var pagesCount = window.PdfViewer.viewer.pagesCount ? window.PdfViewer.viewer.pagesCount : 1
         } catch (error) { }
