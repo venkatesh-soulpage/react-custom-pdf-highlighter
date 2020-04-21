@@ -6,17 +6,13 @@ import Highlight from "./Highlight";
 import Popup from "./Popup";
 import AreaHighlight from "./AreaHighlight";
 import PdfLoader from "./PdfLoader";
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
-import pdfjs from 'pdfjs-dist';
 import Spinner from "./Spinner";
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 var location = Location;
 const getNextId = () => String(Math.random()).slice(2);
-
-const resetHash = () => {
-  location.hash = "";
-};
+const searchParams = new URLSearchParams(location.search);
+const resetHash = () => { location.hash = "" };
+var url = ''
 
 const HighlightPopup = ({ comment }) =>
   comment.text ? (
@@ -27,14 +23,14 @@ const HighlightPopup = ({ comment }) =>
 
 
 class CustomHighlighter extends Component {
+
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       DEFAULT_URL: '',
       highlights: []
     }
   }
-
 
   resetHighlights = () => {
     this.setState({
@@ -62,16 +58,21 @@ class CustomHighlighter extends Component {
       }
   };
 
-  componentDidMount() { 
-    this.setState({DEFAULT_URL : this.props.url})
+  shouldComponentUpdate(nextProps) {
+    return (JSON.stringify(this.props.searchObj) !== JSON.stringify(nextProps.searchObj))
   }
 
-  getHighlightById(id) {
+  componentDidMount() {
+    this.setState({ DEFAULT_URL: this.props.url })
+    url = searchParams.get("url") || this.props.url;
+  }
+
+  getHighlightById = (id) => {
     const { highlights } = this.state;
     return highlights.find(highlight => highlight.id === id);
   }
 
-  addHighlight(highlight) {
+  addHighlight = (highlight) => {
     const { highlights } = this.state;
 
     console.log("Saving highlight", highlight);
@@ -81,7 +82,7 @@ class CustomHighlighter extends Component {
     });
   }
 
-  updateHighlight(highlightId, position, content) {
+  updateHighlight = (highlightId, position, content) => {
     console.log("Updating highlight", highlightId, position, content);
 
     this.setState({
@@ -98,11 +99,7 @@ class CustomHighlighter extends Component {
   }
 
   render() {
-    const { highlights, DEFAULT_URL } = this.state;
-    const { searchObj, pageNumber, className, pdfName } = this.props;
-
-    const searchParams = new URLSearchParams(location.search);
-    const url = searchParams.get("url") || DEFAULT_URL;
+    const { searchObj } = this.props;
 
     this.scrollToHighlightFromHash(searchObj)
     return (
