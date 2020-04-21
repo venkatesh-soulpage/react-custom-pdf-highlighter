@@ -25,7 +25,7 @@ const HighlightPopup = ({ comment }) =>
     </div>
   ) : null;
 
-class Home extends Component{
+class CustomPdfHighlighter extends Component{
   state = {
     highlights: []
   };
@@ -152,5 +152,5 @@ class Home extends Component{
   }
 }
 
-export default (Home);
+export default CustomPdfHighlighter;
 
