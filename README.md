@@ -43,20 +43,22 @@ render() {
 ```
 
 
-`DEFAULT - SearchObject`
+## DEFAULT - SearchObject
+```jsx
+searchObj: {
+    content: { "text": '' }, // default empty string - required filed
+    position: {
+        "boundingRect": { "x1": 30, "y1": 30, "x2": 30, "y2": 30, "width": pdf_width || 612, "height": pdf_height || 792 },
+        "rects": [{ "x1": 30, "y1": 30, "x2": 30, "y2": 30, "width": pdf_width || 612, "height": pdf_height || 792 }],
+        "pageNumber": 1 // default 1
+   }
+    comment: {
+        "text": "",
+        "emoji": ""
+    }
+}
+```
 
-`searchObj: {`
-    `content: { "text": '' }, // default empty string - required filed`
-    `position: {`
-        `"boundingRect": { "x1": 30, "y1": 30, "x2": 30, "y2": 30, "width": pdf_width || 612, "height": pdf_height || 792 },`
-        `"rects": [{ "x1": 30, "y1": 30, "x2": 30, "y2": 30, "width": pdf_width || 612, "height": pdf_height || 792 }],`
-        `"pageNumber": 1 // default 1`
-   `}`
-    `comment: {`
-        `"text": "",`
-        `"emoji": ""`
-    `}`
-`}`
 ### Prior art
 
 [`react-pdf`](https://github.com/wojtekmaj/react-pdf) and
