@@ -1,17 +1,62 @@
 ## react-pdf-highlighter
 
-`custom-react-pdf-highlighter` is a [React](https://reactjs.org/) library that provides annotation experience for PDF documents on web. It is built on top of PDF.js by Mozilla. Text and rectangular highlights are supported. Highlight
+`react-custom-pdf-highlighter` is a [React](https://reactjs.org/) library that provides annotation experience for PDF documents on web. It is built on top of PDF.js by Mozilla. Text and rectangular highlights are supported. Highlight
 data format is independent of the viewport, making it suitable for saving on the
 server.
 
 ## Install
 npm i
-npm i nwb@0.21.0
-npm i flow-copy-source@1.1.0
 
-npm run build
-npm run copy-files
 
+## Usage
+```jsx
+import  { PopupHighlighter } from 'react-custom-pdf-highlighter';
+
+// Inside of a component's render() method:
+render() {
+  return (
+  <PopupHighlighter 
+    features={{ width: 1000, height: 700, top: 100, left: 100 }}
+    center=false  // You need to explicitly say "false" for "top" and "left" to work!!
+    title='PDF Viewer' // default PDF Viewer
+    searchObj=searchObj
+    pdfUrl= URL  // URL = pdf_url
+    mark=true // true to highlight & default true
+/>
+  );
+}
+```
+
+```jsx
+import  { PopupHighlighter } from 'react-custom-pdf-highlighter';
+
+// Inside of a component's render() method:
+render() {
+  return (
+    <CustomHighlighter
+        searchObj=searchObj
+        pdfUrl= URL  // URL = pdf_url
+        mark=true // true to highlight & default true
+    />
+  );
+}
+```
+
+
+`DEFAULT - SearchObject`
+
+`searchObj: {`
+    `content: { "text": '' }, // default empty string - required filed`
+    `position: {`
+        `"boundingRect": { "x1": 30, "y1": 30, "x2": 30, "y2": 30, "width": pdf_width || 612, "height": pdf_height || 792 },`
+        `"rects": [{ "x1": 30, "y1": 30, "x2": 30, "y2": 30, "width": pdf_width || 612, "height": pdf_height || 792 }],`
+        `"pageNumber": 1 // default 1`
+   `}`
+    `comment: {`
+        `"text": "",`
+        `"emoji": ""`
+    `}`
+`}`
 ### Prior art
 
 [`react-pdf`](https://github.com/wojtekmaj/react-pdf) and
