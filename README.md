@@ -28,7 +28,7 @@ render() {
 ```
 
 ```jsx
-import  { PopupHighlighter } from 'react-custom-pdf-highlighter';
+import  { CustomHighlighter } from 'react-custom-pdf-highlighter';
 
 // Inside of a component's render() method:
 render() {
