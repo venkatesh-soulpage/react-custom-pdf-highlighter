@@ -1,6 +1,6 @@
 {
   "name": "react-custom-pdf-highlighter",
-  "version": "0.0.2-alpha2",
+  "version": "0.0.2-alpha4",
   "description": "Set of React components for PDF annotation",
   "main": "lib/index.js",
   "scripts": {
@@ -65,5 +65,5 @@
   "bugs": {
     "url": "https://github.com/mohanmarx/react-custom-pdf-highlighter/issues"
   },
-  "homepage": "https://github.com/mohanmarx/react-custom-pdf-highlighter#readme"
+  "homepage": "https://mohanmarx.github.io/react-custom-pdf-highlighter"
 }

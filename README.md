@@ -1,11 +1,19 @@
-## react-pdf-highlighter
+## react-custom-pdf-highlighter
 
 `react-custom-pdf-highlighter` is a [React](https://reactjs.org/) library that provides annotation experience for PDF documents on web. It is built on top of PDF.js by Mozilla. Text and rectangular highlights are supported. Highlight
 data format is independent of the viewport, making it suitable for saving on the
 server.
 
 ## Install
-npm i
+```jsx
+
+npm i react-custom-pdf-highlighter
+
+or
+
+yarn add react-custom-pdf-highlighter
+
+```
 
 
 ## Usage
